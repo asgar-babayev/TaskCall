@@ -17,86 +17,86 @@ namespace CallTask
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.ForegroundColor = ConsoleColor.White;
-            
-            //    string myNumber = "";
-            //    double balance = 0;
-            //    string fullname = "";
-            //    string number = "";
-            //    int? id = 0;
-            //    int? choise = 0;
-            //SetPhoneInputs:
-            //    SetPhoneInputs(ref myNumber, ref balance);
-            //    Phone phone = new Phone(myNumber, balance);
-            //    bool isOk = phone.CheckBalance(balance);
-            //    if (!isOk)
-            //    {
-            //        Console.WriteLine("Düzgün balans daxil edin");
-            //        goto SetPhoneInputs;
-            //    }
-            //Start:
-            //    do
-            //    {
-            //        Console.SetWindowSize(120, 30);
-            //        Thread.Sleep(500);
-            //        ShowInfo();
-            //        SetChoice(ref choise);
-            //        switch (choise)
-            //        {
-            //            case 0:
-            //                Console.WriteLine("Çıxış edildi");
-            //                break;
-            //            case 1:
-            //                SetContactInputs(ref fullname, ref number);
-            //                Contact contact = new Contact(fullname, number);
-            //                phone.AddNumber(contact);
-            //                break;
-            //            case 2:
-            //            SetBalance:
-            //                SetBalance(ref balance);
-            //                isOk = phone.CheckBalance(balance);
-            //                if (isOk)
-            //                    phone.AddBalance(balance);
-            //                else goto SetBalance;
-            //                break;
-            //            case 3:
-            //                try
-            //                {
-            //                    Console.Write("Id daxil edin: ");
-            //                    choise = Convert.ToInt32(Console.ReadLine());
-            //                    phone.GetContact(choise);
-            //                }
-            //                catch (Exception)
-            //                {
-            //                    Console.WriteLine("Bu id-li şəxs kontaktda mövcud deyil");
-            //                    goto Start;
-            //                }
-            //                Contact contact1 = phone.GetContact(choise);
-            //                phone.Calling(contact1);
-            //                break;
-            //            case 4:
-            //                GetContacts(phone.GetContacts());
-            //                break;
-            //            case 5:
-            //                isOk = KeyPad(out StringBuilder sb, phone.ProviderName);
-            //                if (!isOk)
-            //                    phone.CallingNumber(sb.ToString());
-            //                else phone.CreditBalance(sb.ToString());
-            //                break;
-            //            case 6:
-            //                SetId(ref id);
-            //                DeleteContact(id, phone.GetContacts());
-            //                break;
-            //            case 7:
-            //                phone.BalanceInfo();
-            //                break;
-            //            case 8:
-            //                Console.Clear();
-            //                break;
-            //            default:
-            //                Console.WriteLine("Menyudan kənar rəqəm daxil etməyin");
-            //                break;
-            //        }
-            //    } while (choise != 0);
+
+            string myNumber = "";
+            double balance = 0;
+            string fullname = "";
+            string number = "";
+            int? id = 0;
+            int? choise = 0;
+        SetPhoneInputs:
+            SetPhoneInputs(ref myNumber, ref balance);
+            Phone phone = new Phone(myNumber, balance);
+            bool isOk = phone.CheckBalance(balance);
+            if (!isOk)
+            {
+                Console.WriteLine("Düzgün balans daxil edin");
+                goto SetPhoneInputs;
+            }
+        Start:
+            do
+            {
+                Console.SetWindowSize(120, 30);
+                Thread.Sleep(500);
+                ShowInfo();
+                SetChoice(ref choise);
+                switch (choise)
+                {
+                    case 0:
+                        Console.WriteLine("Çıxış edildi");
+                        break;
+                    case 1:
+                        SetContactInputs(ref fullname, ref number);
+                        Contact contact = new Contact(fullname, number);
+                        phone.AddNumber(contact);
+                        break;
+                    case 2:
+                    SetBalance:
+                        SetBalance(ref balance);
+                        isOk = phone.CheckBalance(balance);
+                        if (isOk)
+                            phone.AddBalance(balance);
+                        else goto SetBalance;
+                        break;
+                    case 3:
+                        try
+                        {
+                            Console.Write("Id daxil edin: ");
+                            choise = Convert.ToInt32(Console.ReadLine());
+                            phone.GetContact(choise);
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Bu id-li şəxs kontaktda mövcud deyil");
+                            goto Start;
+                        }
+                        Contact contact1 = phone.GetContact(choise);
+                        phone.Calling(contact1);
+                        break;
+                    case 4:
+                        GetContacts(phone.GetContacts());
+                        break;
+                    case 5:
+                        isOk = KeyPad(out StringBuilder sb, phone.ProviderName);
+                        if (!isOk)
+                            phone.CallingNumber(sb.ToString());
+                        else phone.CreditBalance(sb.ToString());
+                        break;
+                    case 6:
+                        SetId(ref id);
+                        DeleteContact(id, phone.GetContacts());
+                        break;
+                    case 7:
+                        phone.BalanceInfo();
+                        break;
+                    case 8:
+                        Console.Clear();
+                        break;
+                    default:
+                        Console.WriteLine("Menyudan kənar rəqəm daxil etməyin");
+                        break;
+                }
+            } while (choise != 0);
         }
 
         #region Inputs

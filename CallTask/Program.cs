@@ -2,9 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Media;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace CallTask
 {
@@ -13,79 +16,89 @@ namespace CallTask
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-
-            string myNumber = "";
-            double balance = 0;
-            string fullname = "";
-            string number = "";
-            int? id = 0;
-            int? choise = 0;
-        SetPhoneInputs:
-            SetPhoneInputs(ref myNumber, ref balance);
-            Phone phone = new Phone(myNumber, balance);
-            bool isOk = phone.CheckBalance(balance);
-            if (!isOk)
-            {
-                Console.WriteLine("Düzgün balans daxil edin");
-                goto SetPhoneInputs;
-            }
-        Start:
-            do
-            {
-                SetChoice(ref choise);
-                switch (choise)
-                {
-                    case 0:
-                        ShowInfo();
-                        break;
-                    case 1:
-                        SetContactInputs(ref fullname, ref number);
-                        Contact contact = new Contact(fullname, number);
-                        phone.AddNumber(contact);
-                        break;
-                    case 2:
-                    SetBalance:
-                        SetBalance(ref balance);
-                        isOk = phone.CheckBalance(balance);
-                        if (isOk)
-                            phone.AddBalance(balance);
-                        else goto SetBalance;
-                        break;
-                    case 3:
-                        try
-                        {
-                            Console.Write("Id daxil edin: ");
-                            choise = Convert.ToInt32(Console.ReadLine());
-                            phone.GetContact(choise);
-                        }
-                        catch (Exception)
-                        {
-                            Console.WriteLine("Bu id-li şəxs kontaktda mövcud deyil");
-                            goto Start;
-                        }
-                        Contact contact1 = phone.GetContact(choise);
-                        phone.Calling(contact1);
-                        break;
-                    case 4:
-                        GetContacts(phone.GetContacts());
-                        break;
-                    case 5:
-                        isOk = KeyPad(out StringBuilder sb);
-                        if (!isOk)
-                            phone.CallingNumber(sb.ToString());
-                        break;
-                    case 6:
-                        SetId(ref id);
-                        DeleteContact(id, phone.GetContacts());
-                        break;
-                    case 7:
-                        phone.BalanceInfo();
-                        break;
-                    default:
-                        break;
-                }
-            } while (choise != 8);
+            Console.ForegroundColor = ConsoleColor.White;
+            
+            //    string myNumber = "";
+            //    double balance = 0;
+            //    string fullname = "";
+            //    string number = "";
+            //    int? id = 0;
+            //    int? choise = 0;
+            //SetPhoneInputs:
+            //    SetPhoneInputs(ref myNumber, ref balance);
+            //    Phone phone = new Phone(myNumber, balance);
+            //    bool isOk = phone.CheckBalance(balance);
+            //    if (!isOk)
+            //    {
+            //        Console.WriteLine("Düzgün balans daxil edin");
+            //        goto SetPhoneInputs;
+            //    }
+            //Start:
+            //    do
+            //    {
+            //        Console.SetWindowSize(120, 30);
+            //        Thread.Sleep(500);
+            //        ShowInfo();
+            //        SetChoice(ref choise);
+            //        switch (choise)
+            //        {
+            //            case 0:
+            //                Console.WriteLine("Çıxış edildi");
+            //                break;
+            //            case 1:
+            //                SetContactInputs(ref fullname, ref number);
+            //                Contact contact = new Contact(fullname, number);
+            //                phone.AddNumber(contact);
+            //                break;
+            //            case 2:
+            //            SetBalance:
+            //                SetBalance(ref balance);
+            //                isOk = phone.CheckBalance(balance);
+            //                if (isOk)
+            //                    phone.AddBalance(balance);
+            //                else goto SetBalance;
+            //                break;
+            //            case 3:
+            //                try
+            //                {
+            //                    Console.Write("Id daxil edin: ");
+            //                    choise = Convert.ToInt32(Console.ReadLine());
+            //                    phone.GetContact(choise);
+            //                }
+            //                catch (Exception)
+            //                {
+            //                    Console.WriteLine("Bu id-li şəxs kontaktda mövcud deyil");
+            //                    goto Start;
+            //                }
+            //                Contact contact1 = phone.GetContact(choise);
+            //                phone.Calling(contact1);
+            //                break;
+            //            case 4:
+            //                GetContacts(phone.GetContacts());
+            //                break;
+            //            case 5:
+            //                isOk = KeyPad(out StringBuilder sb, phone.ProviderName);
+            //                if (!isOk)
+            //                    phone.CallingNumber(sb.ToString());
+            //                else phone.CreditBalance(sb.ToString());
+            //                break;
+            //            case 6:
+            //                SetId(ref id);
+            //                DeleteContact(id, phone.GetContacts());
+            //                break;
+            //            case 7:
+            //                phone.BalanceInfo();
+            //                break;
+            //            case 8:
+            //                Console.Clear();
+            //                break;
+            //            default:
+            //                Console.WriteLine("Menyudan kənar rəqəm daxil etməyin");
+            //                break;
+            //        }
+            //    } while (choise != 0);
         }
+
         #region Inputs
         static string myNum;
         static void SetPhoneInputs(ref string myNumber, ref double balance)
@@ -173,7 +186,7 @@ namespace CallTask
         start:
             try
             {
-                Console.Write("Seçim edin(0-Info): ");
+                Console.Write("Seçim edin: ");
                 choice = Convert.ToInt32(Console.ReadLine());
                 choice.ToString().Trim();
                 if (choice < 0) throw new Exception();
@@ -190,7 +203,15 @@ namespace CallTask
         Start:
             try
             {
-                Console.Write("Nömrə üçün rəqəm simvolu daxil edin (Zəng üçün # simvolunu daxil edin): ");
+                Console.WriteLine(@"       
+┌───────────────────────────────┐
+│────────────Kredit─────────────│
+│ Nar - *700# - 3 Azn           │
+│ Bakcell - *150# - 2 Azn       │
+│ Azercell - *100# - 0.50 Azn   │
+│ Naxtel - *100*1# - 1 Azn      │
+└───────────────────────────────┘");
+                Console.Write("Rəqəm simvolu daxil edin: ");
                 choise = Convert.ToChar(Console.ReadLine());
             }
             catch (Exception)
@@ -221,7 +242,7 @@ namespace CallTask
         }
         static void ShowInfo()
         {
-            Console.WriteLine(@"0 - İnformasiya
+            Console.WriteLine(@"0 - Çıxış et
 1 - Kontakta əlavə et
 2 - Balans əlavə et
 3 - Zəng et
@@ -229,7 +250,7 @@ namespace CallTask
 5 - Nömrəyə zəng et
 6 - Kontaktı sil
 7 - Balansı öyrən
-8 - Çıxış
+8 - Konsolu təmizlə
 ");
         }
         static void GetContacts(List<Contact> list)
@@ -259,14 +280,15 @@ namespace CallTask
                 Console.WriteLine("Bu id movcud deyil");
             }
         }
-        static bool KeyPad(out StringBuilder numberInput)
+        static bool KeyPad(out StringBuilder numberInput, string p)
         {
             numberInput = new StringBuilder();
             bool isOk = true;
+            bool isTrue = true;
             char choise = ' ';
             {
-                KeyPadUI(numberInput);
-                while (numberInput.Length <= 10 && isOk == true)
+                PhoneUI(numberInput, p);
+                while (numberInput.Length <= 13 && isOk && isTrue)
                 {
                     CharInput(ref choise);
                     switch (choise)
@@ -321,35 +343,83 @@ namespace CallTask
                             Console.Beep(783, 300);
                             numberInput.Append("0");
                             break;
+                        case '*':
+                            Console.Clear();
+                            Console.Beep(783, 300);
+                            numberInput.Append("*");
+                            break;
                         case '#':
+                            Console.Clear();
+                            Console.Beep(783, 300);
+                            numberInput.Append("#");
+                            break;
+                        case '+':
+                            Console.Clear();
+                            Console.Beep(783, 300);
+                            numberInput.Append("+");
+                            break;
+                        case '-':
+                            numberInput.Clear();
+                            break;
+                        case 'Y':
                             isOk = false;
                             break;
-                        case '*':
+                        case 'N':
                             return true;
                         default:
+                            Console.Clear();
                             break;
                     }
-                    KeyPadUI(numberInput);
-
+                    PhoneUI(numberInput, p);
                 }
-                numberInput.ToString();
-                return isOk;
+                if (numberInput.ToString() == "*700#") return true;
+                else if (numberInput.ToString() == "*150#") return true;
+                else if (numberInput.ToString() == "*100#") return true;
+                else if (numberInput.ToString() == "*100*1#") return true;
+
+                Regex regex = new Regex(@"^(\+994|0)(77|51|50|55|70|99|10|60)(\-|)(\d){3}(\-|)(\d){2}(\-|)(\d){2}$");
+                if (regex.IsMatch(numberInput.ToString()))
+                {
+                    numberInput.ToString();
+                    return isOk;
+                }
+                Console.WriteLine("Nömrə yanlış daxil edildi");
+                return true;
             }
         }
-        static void KeyPadUI(StringBuilder num)
+        static void PhoneUI(StringBuilder num, string p)
         {
-            Console.WriteLine(@$"
-                    {num}
-            ┌───────────────────────┐
-            │   1   │   2   │   3   │
-            │───────────────────────│
-            │   4   │   5   │   6   │
-            │───────────────────────│
-            │   7   │   8   │   9   │
-            │───────────────────────│
-            │   *   │   0   │   #   │
-            └───────────────────────┘");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetWindowSize(35, 35);
+            var date = DateTime.Now.ToShortTimeString();
+            Console.WriteLine(@$" 
+    ┌───────────────────────┐
+    │                   ╲|╱ │
+    │ {p}                 
+    │                       │
+    │        {date}        
+    │      ───────────      │
+    │                       │
+    │                       │
+    │                       │
+    │                       │
+    │                       │
+            {num}      
+    │───────────────────────│
+    │───────┐   ↑   ┌───────│
+    │   Y   │ ← + → │   N   │
+    │───────┘   ↓   └───────│
+    │───────────────────────│
+    │   1   │   2   │   3   │
+    │───────────────────────│
+    │   4   │   5   │   6   │
+    │───────────────────────│
+    │   7   │   8   │   9   │
+    │───────────────────────│
+    │   *   │   0   │   #   │
+    └───────────────────────┘");
         }
         #endregion
     }
+
 }

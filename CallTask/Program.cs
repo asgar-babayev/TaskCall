@@ -8,6 +8,7 @@ using System.Media;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace CallTask
 {
@@ -188,7 +189,6 @@ namespace CallTask
             {
                 Console.Write("Seçim edin: ");
                 choice = Convert.ToInt32(Console.ReadLine());
-                choice.ToString().Trim();
                 if (choice < 0) throw new Exception();
             }
             catch (FormatException)
@@ -294,6 +294,7 @@ namespace CallTask
                     switch (choise)
                     {
                         case '1':
+                            Console.ReadKey(true);
                             numberInput.Append("1");
                             Console.Beep(783, 300);
                             Console.Clear();

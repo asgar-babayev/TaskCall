@@ -57,7 +57,7 @@ namespace CallTask.Models
                 if (!isOk) break;
                 counter = DateTime.Parse(_stopwatch.Elapsed.ToString()).ToString(@"mm\:ss");
                 talkSecond++;
-                PhoneCallUI("  "+fullname, counter);
+                PhoneCallUI("   " + fullname, counter);
                 if (talkSecond == 59)
                 {
                     talkSecond = 0;
@@ -100,7 +100,7 @@ namespace CallTask.Models
                 Console.Clear();
             }
             _stopwatch.Stop();
-            PhoneCallUI("Balans "+Balance.ToString(), counter);
+            PhoneCallUI("Balans " + Balance.ToString(), counter);
             Console.Beep(329, 300); Console.Beep(329, 300); Console.Beep(329, 300);
             Thread.Sleep(1000);
             return isOk;
@@ -139,8 +139,10 @@ namespace CallTask.Models
                     break;
                 }
                 isAvailable = CheckCallingSeconds(count);
-                if (!isAvailable) {soundPlayer.Stop(); _stopwatch.Stop();
-            }
+                if (!isAvailable)
+                {
+                    soundPlayer.Stop(); _stopwatch.Stop();
+                }
             }
             return isAvailable;
         }
@@ -166,7 +168,7 @@ namespace CallTask.Models
             {
                 Task.WhenAny(task1, task2);
                 string counter = DateTime.Parse(_stopwatch.Elapsed.ToString()).ToString(@"mm\:ss");
-                PhoneCallUI("Zəng gedir",counter);
+                PhoneCallUI("Zəng gedir", counter);
                 count++;
                 Thread.Sleep(1000);
                 Console.Clear();
@@ -280,16 +282,17 @@ namespace CallTask.Models
         }
         public bool CheckYesKey()
         {
+            yes:
             if (Console.ReadKey().Key == ConsoleKey.Y)
-
                 return false;
-            return true;
+            else goto yes;
         }
         public bool CheckNoKey()
         {
+            no:
             if (Console.ReadKey().Key == ConsoleKey.N)
                 return false;
-            return true;
+            else goto no;
         }
         public bool CheckCallingSeconds(int count)
         {
@@ -350,10 +353,10 @@ Space - Söndür");
     │                4G ╲|╱ │       
     │ {ProviderName}           
     │                       │
-    │        {date}       │
+    │        {date}        │
     │      ───────────      │
     │                       │
-    │       {info}                  
+    │      {info}                  
     │                       │
     │         {count}         │               
     │                       │

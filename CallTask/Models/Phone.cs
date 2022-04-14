@@ -385,7 +385,7 @@ Space - Söndür");
     │                4G ╲|╱ │       
     │ {ProviderName}           
     │                       │
-    │        {date}       │
+    │        {date}       
     │      ───────────      │
     │                       │
     │                       │
